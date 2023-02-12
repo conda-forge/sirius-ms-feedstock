@@ -15,7 +15,7 @@ echo "### Show Build dir"
 ls -lah ./
 
 echo "### Run gradle build"
-./gradlew :sirius_dist:sirius_gui_multi_os:installDist \
+./gradlew :sirius_dist:sirius_gui_multi_os:installSiriusDist \
     -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/lib" \
     -P "build.sirius.starter.jdk.include=false" \
     -P "build.sirius.native.cbc.exclude=true" \

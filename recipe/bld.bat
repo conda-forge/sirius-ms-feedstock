@@ -17,7 +17,7 @@ ECHO "### Show Build dir"
 dir .\
 
 ECHO "### Run gradle build"
-call gradlew.bat :sirius_dist:sirius_gui_multi_os:installDist^
+call gradlew.bat :sirius_dist:sirius_gui_multi_os:installSiriusDist^
     -P "build.sirius.location.lib=..\share\%packageName%\lib"^
     -P "build.sirius.starter.jdk.include=false"^
     -P "build.sirius.native.cbc.exclude=true"^
