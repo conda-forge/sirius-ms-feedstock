@@ -23,7 +23,6 @@ ECHO "### Run gradle build"
 call gradlew.bat :sirius_dist:sirius_gui_multi_os:installSiriusDist^
     -P "build.sirius.location.lib=..\share\%packageName%\lib"^
     -P "build.sirius.starter.jdk.include=false"^
-    -P "build.sirius.native.cbc.exclude=true"^
     -P "build.sirius.native.openjfx.exclude=false"^
     -P "build.sirius.starter.jdk.location=../Library/lib/jvm"
 if errorlevel 1 exit 1
