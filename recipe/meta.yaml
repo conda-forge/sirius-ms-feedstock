@@ -1,5 +1,5 @@
 {% set version = "5.6.4" %}
-{% set commit = "6e51fdee75002bf2b91597b9318b98b674939a9a" %}
+{% set commit = "aab1623ecad0700949123c84f240f7e6680bebf9" %}
 
 package:
   name: sirius-ms
@@ -7,10 +7,10 @@ package:
 
 source:
   - url: https://github.com/boecker-lab/sirius/archive/{{ commit }}.zip
-    sha256: efc618bf61b63ebcba34466fa197b10e1cd1c7ad89586abba87f2a76ab48f166
+    sha256: b464f82d9374830b220f56e8d0a82ad4ae4713efe475998e6fc341852bedaf7d
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:

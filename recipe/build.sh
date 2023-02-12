@@ -17,10 +17,9 @@ ls -lah ./
 echo "### Run gradle build"
 ./gradlew :sirius_dist:sirius_gui_multi_os:installDist \
     -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/lib" \
-    -P "build.sirius.native.remove.win=true" \
-    -P "build.sirius.native.remove.linux=true" \
-    -P "build.sirius.native.remove.mac=true" \
-    -P "build.sirius.starter.remove.win=true"
+    -P "build.sirius.starter.jdk.include=false" \
+    -P "build.sirius.native.cbc.exclude=true" \
+    -P "build.sirius.native.openjfx.exclude=false"
 
 echo "### Create package dirs"
 mkdir -p "${outdir:?}"
