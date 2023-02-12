@@ -1,7 +1,6 @@
 setlocal EnableDelayedExpansion
 SET packageName=%PKG_NAME%-%PKG_VERSION%-%PKG_BUILDNUM%
 SET outdir=%PREFIX%/share/%packageName%
-SET siriusDistName=sirius
 
 ECHO "### ENV INFO"
 ECHO "PREFIX=%PREFIX%"
