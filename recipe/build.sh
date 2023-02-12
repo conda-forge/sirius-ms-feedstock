@@ -1,6 +1,6 @@
 packageName=$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM
 outdir=$PREFIX/share/$packageName
-siriusDistName="sirius"
+siriusDistName="sirius_gui_multi_os-sirius"
 
 echo "### BUILD ENV INFO"
 echo "PREFIX=$PREFIX"

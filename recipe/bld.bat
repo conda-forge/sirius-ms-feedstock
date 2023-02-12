@@ -10,7 +10,7 @@ ECHO "LD_RUN_PATH=%LD_RUN_PATH%"
 ECHO "JAVA_HOME=%JAVA_HOME%"
 ECHO "packageName=%packageName%"
 ECHO "outdir=%outdir%"
-ECHO "siriusDistName=%siriusDistName%"
+ECHO "siriusDistName=%sirius_gui_multi_os-sirius%"
 ECHO "### ENV INFO END"
 
 ECHO "### Show Build dir"
