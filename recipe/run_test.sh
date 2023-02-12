@@ -6,6 +6,8 @@ echo "CONDA_PREFIX=$CONDA_PREFIX"
 echo "LD_RUN_PATH=$LD_RUN_PATH"
 echo "JAVA_HOME = $JAVA_HOME"
 echo "JDK_HOME = $JDK_HOME"
+echo "ARCH = $ARCH"
+echo "OSX_ARCH = $OSX_ARCH"
 echo "### TEST ENV INFO END"
 
 echo "### [JAVA] Try run java"
