@@ -7,6 +7,8 @@ echo "CONDA_PREFIX=$CONDA_PREFIX"
 echo "LD_RUN_PATH=$LD_RUN_PATH"
 echo "ARCH = $ARCH"
 echo "OSX_ARCH = $OSX_ARCH"
+echo "build_platform = $build_platform"
+echo "target_platform = $target_platform"
 echo "packageName=$packageName"
 echo "outdir=$outdir"
 echo "siriusDistName=$siriusDistName"
@@ -15,23 +17,14 @@ echo "### BUILD ENV INFO END"
 echo "### Show Build dir"
 ls -lah ./
 
+echo "### Run gradle build on '$build_platform' for target platform: '$target_platform'"
+./gradlew :sirius_dist:sirius_gui_multi_os:installSiriusDist \
+  -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/lib" \
+  -P "build.sirius.starter.jdk.include=false" \
+  -P "build.sirius.native.cbc.exclude=true" \
+  -P "build.sirius.native.openjfx.exclude=false" \
+  -P "build.sirius.platform=$target_platform"
 
-if [ -n "$OSX_ARCH" ]; then
-  echo "### Run gradle build for platform: 'mac-$OSX_ARCH'"
-  ./gradlew :sirius_dist:sirius_gui_multi_os:installSiriusDist \
-    -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/lib" \
-    -P "build.sirius.starter.jdk.include=false" \
-    -P "build.sirius.native.cbc.exclude=true" \
-    -P "build.sirius.native.openjfx.exclude=false" \
-    -P "build.sirius.platform=mac-$OSX_ARCH"
-else
-  echo "### Run gradle build for autodetected platform"
-  ./gradlew :sirius_dist:sirius_gui_multi_os:installSiriusDist \
-    -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/lib" \
-    -P "build.sirius.starter.jdk.include=false" \
-    -P "build.sirius.native.cbc.exclude=true" \
-    -P "build.sirius.native.openjfx.exclude=false"
-fi
 
 echo "### Create package dirs"
 mkdir -p "${outdir:?}"
