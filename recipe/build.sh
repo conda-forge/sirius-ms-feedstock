@@ -39,5 +39,5 @@ echo "### Show bin dir"
 ls -lah "$PREFIX/bin"
 
 echo "### Show start script"
-ls -lah "$PREFIX/bin/sirius.sh"
-cat "$PREFIX/bin/sirius.sh"
+ls -lah "$PREFIX/bin/sirius"
+cat "$PREFIX/bin/sirius"

@@ -15,10 +15,10 @@ echo "### [JAVA] Try run $JAVA_HOME"
 "$JAVA_HOME/bin/java" -version
 
 echo "### [SIRIUS] Simple Sirius version test"
-sirius.sh --version
+sirius --version
 
 echo "### [SIRIUS] Run SIRIUS ILP solver Test"
-sirius.sh -i $RECIPE_DIR/Kaempferol.ms -o test-out sirius
+sirius -i $RECIPE_DIR/Kaempferol.ms -o test-out sirius
 
 echo "### [SIRIUS] Check SIRIUS ILP solver Test results"
 if [ ! -f "test-out/1_Kaempferol_Kaempferol/trees" ]; then
