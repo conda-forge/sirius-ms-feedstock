@@ -4,6 +4,8 @@ ECHO "### Start TESTING"
 ECHO "### [JAVA] Infos about JDK locations"
 ECHO "JAVA_HOME = %JAVA_HOME%"
 ECHO "JDK_HOME = %JDK_HOME%"
+ECHO "ARCH = %ARCH%"
+ECHO "OSX_ARCH = %OSX_ARCH%"
 
 ECHO "### [JAVA] Try run java"
 java -version

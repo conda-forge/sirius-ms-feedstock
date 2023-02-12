@@ -6,6 +6,8 @@ echo "CONDA_PREFIX=$CONDA_PREFIX"
 echo "LD_RUN_PATH=$LD_RUN_PATH"
 echo "JAVA_HOME = $JAVA_HOME"
 echo "JDK_HOME = $JDK_HOME"
+echo "ARCH = $ARCH"
+echo "OSX_ARCH = $OSX_ARCH"
 echo "### TEST ENV INFO END"
 
 echo "### [JAVA] Try run java"
@@ -15,10 +17,10 @@ echo "### [JAVA] Try run $JAVA_HOME"
 "$JAVA_HOME/bin/java" -version
 
 echo "### [SIRIUS] Simple Sirius version test"
-sirius.sh --version
+sirius --version
 
 echo "### [SIRIUS] Run SIRIUS ILP solver Test"
-sirius.sh -i $RECIPE_DIR/Kaempferol.ms -o test-out sirius
+sirius -i $RECIPE_DIR/Kaempferol.ms -o test-out sirius
 
 echo "### [SIRIUS] Check SIRIUS ILP solver Test results"
 if [ ! -f "test-out/1_Kaempferol_Kaempferol/trees" ]; then
