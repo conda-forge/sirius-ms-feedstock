@@ -18,27 +18,26 @@ echo "### Show Build dir"
 ls -lah ./
 
 echo "### Run gradle build on '$build_platform' for target platform: '$target_platform'"
-./gradlew :sirius_dist:sirius_gui_multi_os:installSiriusDist \
-  -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/lib" \
+./gradlew :sirius_dist:sirius_gui_dist:installSiriusDist \
+  -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/app" \
   -P "build.sirius.starter.jdk.include=false" \
   -P "build.sirius.native.cbc.exclude=true" \
   -P "build.sirius.native.openjfx.exclude=false" \
   -P "build.sirius.platform=$target_platform"
-
 
 echo "### Create package dirs"
 mkdir -p "${outdir:?}"
 mkdir -p "${PREFIX:?}/bin"
 
 echo "### Copy jars"
-cp -rp ./sirius_dist/sirius_gui_multi_os/build/install/$siriusDistName/* "${outdir:?}/"
+cp -rp ./sirius_dist/sirius_gui_dist/build/install/$siriusDistName/* "${outdir:?}/"
 rm -r "${outdir:?}/bin"
 
 echo "### Show jar dir"
-ls -lah "$outdir/lib"
+ls -lah "$outdir/app"
 
 echo "### Copy starters"
-cp -rp ./sirius_dist/sirius_gui_multi_os/build/install/$siriusDistName/bin/* "${PREFIX:?}/bin/"
+cp -rp ./sirius_dist/sirius_gui_dist/build/install/$siriusDistName/bin/* "${PREFIX:?}/bin/"
 
 echo "### Show bin dir"
 ls -lah "$PREFIX/bin"

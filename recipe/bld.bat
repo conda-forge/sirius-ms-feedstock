@@ -20,8 +20,8 @@ ECHO "### Show Build dir"
 dir .\
 
 ECHO "### Run gradle build"
-call gradlew.bat :sirius_dist:sirius_gui_multi_os:installSiriusDist^
-    -P "build.sirius.location.lib=..\share\%packageName%\lib"^
+call gradlew.bat :sirius_dist:sirius_gui_dist:installSiriusDist^
+    -P "build.sirius.location.lib=..\share\%packageName%\app"^
     -P "build.sirius.starter.jdk.include=false"^
     -P "build.sirius.native.openjfx.exclude=false"^
     -P "build.sirius.starter.jdk.location=../Library/lib/jvm"
@@ -31,27 +31,28 @@ ECHO "### Create package dirs"
 if not exist "%outdir%" mkdir "%outdir%"
 if errorlevel 1 exit 1
 
-if not exist "%PREFIX%\bin" mkdir "%PREFIX%\bin"
-if errorlevel 1 exit 1
-
 ECHO "### Copy jars"
-xcopy /e /k /h /i /q .\sirius_dist\sirius_gui_multi_os\build\install\%siriusDistName%\* "%outdir%\"
+xcopy /e /k /h /i /q .\sirius_dist\sirius_gui_dist\build\install\%siriusDistName%\* "%outdir%\"
 if errorlevel 1 exit 1
 
 ECHO "### Remove bin"
-rmdir /s /q "%outdir%\bin"
+del /f "%outdir%\sirius.exe"
+del /f "%outdir%\sirius-gui.exe"
+del /f "%outdir%\sirius.bat"
 if errorlevel 1 exit 1
 
 ECHO "### Show jar dir"
-dir "%outdir%\lib"
+dir "%outdir%\app"
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir source"
-dir .\sirius_dist\sirius_gui_multi_os\build\install\%siriusDistName%\bin\
+dir .\sirius_dist\sirius_gui_dist\build\install\%siriusDistName%\
 if errorlevel 1 exit 1
 
 ECHO "### Copy starters"
-xcopy /e /k /h /i /q .\sirius_dist\sirius_gui_multi_os\build\install\%siriusDistName%\bin\* "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\sirius_gui_dist\build\install\%siriusDistName%\bin\sirius.exe "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\sirius_gui_dist\build\install\%siriusDistName%\bin\sirius.bat "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\sirius_gui_dist\build\install\%siriusDistName%\bin\sirius-gui.exe "%PREFIX%\bin\"
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir target"
