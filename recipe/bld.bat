@@ -36,7 +36,7 @@ ECHO "### Copy jars"
 xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\* "%outdir%\"
 if errorlevel 1 exit 1
 
-ECHO "### Remove bin"
+ECHO "### Remove starters"
 del /f "%outdir%\sirius.exe"
 del /f "%outdir%\sirius-gui.exe"
 del /f "%outdir%\sirius.bat"
@@ -51,9 +51,9 @@ dir .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\
 if errorlevel 1 exit 1
 
 ECHO "### Copy starters"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\bin\sirius.exe "%PREFIX%\bin\"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\bin\sirius.bat "%PREFIX%\bin\"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\bin\sirius-gui.exe "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%PREFIX%\bin\"
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir target"
