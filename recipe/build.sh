@@ -11,6 +11,7 @@ echo "build_platform = $build_platform"
 echo "target_platform = $target_platform"
 echo "packageName=$packageName"
 echo "outdir=$outdir"
+echo "siriusDistDir=$siriusDistDir"
 echo "siriusDistName=$siriusDistName"
 echo "### BUILD ENV INFO END"
 
@@ -30,14 +31,14 @@ mkdir -p "${outdir:?}"
 mkdir -p "${PREFIX:?}/bin"
 
 echo "### Copy jars"
-cp -rp ./sirius_dist/sirius_gui_dist/build/install/$siriusDistName/* "${outdir:?}/"
+cp -rp ./sirius_dist/$siriusDistDir/build/install/$siriusDistName/* "${outdir:?}/"
 rm -r "${outdir:?}/bin"
 
 echo "### Show jar dir"
 ls -lah "$outdir/app"
 
 echo "### Copy starters"
-cp -rp ./sirius_dist/sirius_gui_dist/build/install/$siriusDistName/bin/* "${PREFIX:?}/bin/"
+cp -rp ./sirius_dist/$siriusDistDir/build/install/$siriusDistName/bin/* "${PREFIX:?}/bin/"
 
 echo "### Show bin dir"
 ls -lah "$PREFIX/bin"
