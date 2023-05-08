@@ -15,7 +15,7 @@ ECHO "JAVA_HOME=%JAVA_HOME%"
 ECHO "packageName=%packageName%"
 ECHO "outdir=%outdir%"
 echo "siriusDistDir=%siriusDistDir%"
-ECHO "siriusDistName=%sirius_gui_multi_os-sirius%"
+ECHO "siriusDistName=%siriusDistName%"
 ECHO "### ENV INFO END"
 
 ECHO "### Show Build dir"
@@ -31,6 +31,9 @@ if errorlevel 1 exit 1
 
 ECHO "### Create package dirs"
 if not exist "%outdir%" mkdir "%outdir%"
+if errorlevel 1 exit 1
+
+if not exist "%PREFIX%\bin" mkdir "%PREFIX%\bin"
 if errorlevel 1 exit 1
 
 ECHO "### Copy jars"
@@ -52,15 +55,15 @@ dir .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir target before"
-dir "%BUILD_PREFIX%\bin"
+dir "%PREFIX%\bin"
 if errorlevel 1 exit 1
 
 ECHO "### Copy starters"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%BUILD_PREFIX%\bin\"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%BUILD_PREFIX%\bin\"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%BUILD_PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%PREFIX%\bin\"
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir target after"
-dir "%BUILD_PREFIX%\bin"
+dir "%PREFIX%\bin"
 if errorlevel 1 exit 1
