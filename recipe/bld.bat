@@ -50,12 +50,16 @@ ECHO "### Show bin dir source"
 dir .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\
 if errorlevel 1 exit 1
 
-ECHO "### Copy starters"
-copy .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%PREFIX%\bin\"
-copy .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%PREFIX%\bin\"
-copy .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%PREFIX%\bin\"
+ECHO "### Show bin dir target before"
+dir "%PREFIX%\bin"
 if errorlevel 1 exit 1
 
-ECHO "### Show bin dir target"
+ECHO "### Copy starters"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%PREFIX%\bin\"
+if errorlevel 1 exit 1
+
+ECHO "### Show bin dir target after"
 dir "%PREFIX%\bin"
 if errorlevel 1 exit 1
