@@ -4,6 +4,7 @@ SET outdir=%PREFIX%/share/%packageName%
 
 ECHO "### ENV INFO"
 ECHO "PREFIX=%PREFIX%"
+ECHO "BUILD_PREFIX=%BUILD_PREFIX%"
 ECHO "CONDA_PREFIX=%CONDA_PREFIX%"
 ECHO "LD_RUN_PATH=%LD_RUN_PATH%"
 ECHO "ARCH = %ARCH%"
@@ -51,15 +52,15 @@ dir .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir target before"
-dir "%PREFIX%\bin"
+dir "%BUILD_PREFIX%\bin"
 if errorlevel 1 exit 1
 
 ECHO "### Copy starters"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%PREFIX%\bin\"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%PREFIX%\bin\"
-xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.exe "%BUILD_PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius.bat "%BUILD_PREFIX%\bin\"
+xcopy /e /k /h /i /q .\sirius_dist\%siriusDistDir%\build\install\%siriusDistName%\sirius-gui.exe "%BUILD_PREFIX%\bin\"
 if errorlevel 1 exit 1
 
 ECHO "### Show bin dir target after"
-dir "%PREFIX%\bin"
+dir "%BUILD_PREFIX%\bin"
 if errorlevel 1 exit 1
