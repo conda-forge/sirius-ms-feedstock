@@ -1,6 +1,6 @@
-{% set version = "5.6.4" %}
-{% set commit = "128dea0f677ba36202539d65b2dc1d37cd1a4581" %}
-{% set siriusDistName = "sirius_gui_multi_os-sirius" %}
+{% set version = "5.7.0" %}
+{% set commit = "50789c899648fea0ecc4bdf07440388843d86255" %}
+{% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
   name: sirius-ms
@@ -8,12 +8,13 @@ package:
 
 source:
   - url: https://github.com/boecker-lab/sirius/archive/{{ commit }}.zip
-    sha256: dd864526bda96548affd6eab90ab124819eed1f5ac1bde6b81dfe83e757a6ce4
+    sha256: 3aec1dbd7754953b6d0a5f3c1efb4a042795a3af152336961877154f8fa746ad
 
 build:
-  number: 1
+  number: 0
   script_env:
-    - siriusDistName={{ siriusDistName }}
+    - siriusDistName={{ siriusDistDir }}-sirius
+    - siriusDistDir={{ siriusDistDir }}
 
 requirements:
   build:
@@ -30,9 +31,9 @@ about:
   home: https://bio.informatik.uni-jena.de/software/sirius/
   license: AGPL-3.0-only AND OTHER
   license_file:
-    - sirius_dist/sirius_gui_multi_os/build/install/{{ siriusDistName }}/COPYING.txt
-    - sirius_dist/sirius_gui_multi_os/build/install/{{ siriusDistName }}/LICENSE.txt
-    - sirius_dist/sirius_gui_multi_os/build/install/{{ siriusDistName }}/licenses.md
+    - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/COPYING.txt
+    - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/LICENSE.txt
+    - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/licenses.md
   summary: "SIRIUS (CLI + GUI) LC-MS/MS data analyses framework. Includes: SIRIUS, ZODIAC, CSI:FingerID (with COSMIC) and CANOPUS"
   description: SIRIUS is a java-based software framework for the analysis of LC-MS/MS data of metabolites and other
     small molecules of biological interest. SIRIUS integrates a collection of our tools, including CSI:FingerID
