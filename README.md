@@ -1,11 +1,11 @@
-About sirius-ms
-===============
+About sirius-ms-feedstock
+=========================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/sirius-ms-feedstock/blob/main/LICENSE.txt)
 
 Home: https://bio.informatik.uni-jena.de/software/sirius/
 
 Package license: AGPL-3.0-only AND OTHER
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/sirius-ms-feedstock/blob/main/LICENSE.txt)
 
 Summary: SIRIUS (CLI + GUI) LC-MS/MS data analyses framework. Includes: SIRIUS, ZODIAC, CSI:FingerID (with COSMIC) and CANOPUS
 
