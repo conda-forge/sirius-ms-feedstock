@@ -21,6 +21,8 @@ then
     mkdir -p "$PREFIX/Menu"
     cp "$RECIPE_DIR/menu-osx.json" "$PREFIX/Menu"
     cp "$RECIPE_DIR/sirius-icon.icns" "$PREFIX/Menu"
+    echo "### Show Menu dir"
+    ls -lah "$PREFIX/Menu"
 else
     echo "### Linux menu currently not supported!"
 #    mkdir -p "$PREFIX/Menu"
@@ -28,8 +30,7 @@ else
 #    cp "$RECIPE_DIR/sirius-icon.png" "$PREFIX/Menu"
 fi
 
-echo "### Show Menu dir"
-ls -lah "$PREFIX/Menu"
+
 
 echo "### Show Build dir"
 ls -lah ./
