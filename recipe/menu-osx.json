@@ -1,5 +1,5 @@
 {
-  "menu_name": "SIRIUS (${BIN_DIR})",
+  "menu_name": "SIRIUS (conda)",
   "menu_items":
   [
     {

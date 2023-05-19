@@ -1,11 +1,12 @@
 {
-  "menu_name": "SIRIUS (${ENV_NAME})",
+  "menu_name": "SIRIUS (conda)",
   "menu_items":
   [
     {
-      "script": "${PREFIX}/sirius-gui.exe",
-      "name": "SIRIUS GUI",
-      "workdir": "${PREFIX}",
+      "script": "${PREFIX}/bin/sirius-gui.exe",
+      "name": "SIRIUS",
+      "comment": "SIRIUS LC-MS/MS data analysis framework (GUI).",
+      "workdir": "${USERPROFILE}",
       "icon": "${MENU_DIR}/sirius-icon.ico"
     },
     {
