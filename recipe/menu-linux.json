@@ -1,0 +1,17 @@
+{
+  "menu_name": "SIRIUS (${ENV_NAME})",
+  "menu_items":
+  [
+    {
+      "cmd": ["${PREFIX}/sirius"],
+      "name": "SIRIUS",
+      "comment": "SIRIUS LC-MS/MS data analysis framework.",
+      "terminal": false,
+      "icon": "${MENU_DIR}/sirius-icon.png"
+    },
+    {
+      "cmd": ["{{WEBBROWSER}}", "https://boecker-lab.github.io/docs.sirius.github.io/"],
+      "name": "SIRIUS Documentation"
+    }
+  ]
+}

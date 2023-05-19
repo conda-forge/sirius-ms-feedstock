@@ -15,6 +15,23 @@ echo "siriusDistDir=$siriusDistDir"
 echo "siriusDistName=$siriusDistName"
 echo "### BUILD ENV INFO END"
 
+echo "### Make Menu dir"
+if [ $OSX_ARCH ]
+then
+    mkdir -p "$PREFIX/Menu"
+    cp "$RECIPE_DIR/menu-osx.json" "$PREFIX/Menu"
+    cp "$RECIPE_DIR/sirius-icon.icns" "$PREFIX/Menu"
+    echo "### Show Menu dir"
+    ls -lah "$PREFIX/Menu"
+else
+    echo "### Linux menu currently not supported!"
+#    mkdir -p "$PREFIX/Menu"
+#    cp "$RECIPE_DIR/menu-linux.json" "$PREFIX/Menu"
+#    cp "$RECIPE_DIR/sirius-icon.png" "$PREFIX/Menu"
+fi
+
+
+
 echo "### Show Build dir"
 ls -lah ./
 

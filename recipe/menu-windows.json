@@ -1,0 +1,16 @@
+{
+  "menu_name": "SIRIUS (${ENV_NAME})",
+  "menu_items":
+  [
+    {
+      "script": "${PREFIX}/sirius-gui.exe",
+      "name": "SIRIUS GUI",
+      "workdir": "${PREFIX}",
+      "icon": "${MENU_DIR}/sirius-icon.ico"
+    },
+    {
+      "webbrowser": "https://boecker-lab.github.io/docs.sirius.github.io/",
+      "name": "SIRIUS Documentation"
+    }
+  ]
+}

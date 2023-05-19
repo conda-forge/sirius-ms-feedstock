@@ -67,3 +67,11 @@ if errorlevel 1 exit 1
 ECHO "### Show bin dir target after"
 dir "%PREFIX%\bin"
 if errorlevel 1 exit 1
+
+ECHO "Copy Menu json..."
+if not exist "%PREFIX%\Menu" mkdir "%PREFIX%\Menu"
+copy "%RECIPE_DIR%\menu-windows.json" "%PREFIX%\Menu"
+copy "%RECIPE_DIR%\sirius-icon.ico" "%PREFIX%\Menu"
+
+ECHO "### Show menu dir after"
+dir "%PREFIX%\Menu"
