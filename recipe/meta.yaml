@@ -1,5 +1,5 @@
-{% set version = "5.7.1" %}
-{% set commit = "3fdc83b0fefe8721a79649a34129da55f9bccf0d" %}
+{% set version = "5.7.2" %}
+{% set commit = "e12caae2b363bf2f80f418e3cebbcc25442a3bfe" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   - url: https://github.com/boecker-lab/sirius/archive/{{ commit }}.zip
-    sha256: 171708e50dd47ef831ea3ed316cd7a9832f0c1c88958d0d3bb5d8c13fa3169ac
+    sha256: 09548db1ad10dbea0bc17c220b1f86cccfbd696f49ca52e74b7ec93788e99f52
 
 build:
   number: 0
