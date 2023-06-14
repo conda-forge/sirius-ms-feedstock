@@ -17,9 +17,9 @@ build:
 
 requirements:
   build:
-    - openjdk
+    - openjdk 17.*
   run:
-    - openjdk
+    - openjdk 17.*
     - coin-or-cbc  # [not win]
 
 test:
