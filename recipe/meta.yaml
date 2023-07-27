@@ -1,4 +1,4 @@
-{% set version = "5.8.1" %}
+{% set version = "5.8.2" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/boecker-lab/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 333446d0b90b771f6d3a0da47a63490cecfc6fe17f6e153a51de2cfa7cc9710c
+    sha256: d1d51bc5792c5b54659a8b09c8c300cc1c75c3060a928027d8e797aa699217e7
 
 build:
   number: 0
