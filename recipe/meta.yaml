@@ -10,7 +10,7 @@ source:
     sha256: d1d51bc5792c5b54659a8b09c8c300cc1c75c3060a928027d8e797aa699217e7
 
 build:
-  number: 0
+  number: 1
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
     - siriusDistDir={{ siriusDistDir }}
