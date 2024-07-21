@@ -1,4 +1,4 @@
-{% set version = "5.8.6" %}
+{% set version = "6.0.1" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -6,8 +6,8 @@ package:
   version: {{ version }}
 
 source:
-  - url: https://github.com/boecker-lab/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: f769a474140d6e28168d6d1526afc9e923e66eaeb0ace400e6c2ae77aa7f9202
+  - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
+    sha256: 6e0319243091afb00ffbc829118fd71408a4069e4fe39c8e99e18f77bb08b39c
 
 build:
   number: 0
@@ -17,9 +17,9 @@ build:
 
 requirements:
   build:
-    - openjdk 17.*
+    - openjdk 21.*
   run:
-    - openjdk 17.*
+    - openjdk 21.*
     - coin-or-cbc  # [not win]
 
 test:
@@ -36,8 +36,8 @@ about:
   summary: 'SIRIUS (CLI + GUI) LC-MS/MS data analyses framework. Includes: SIRIUS, ZODIAC, CSI:FingerID (with COSMIC) and CANOPUS'
   description: SIRIUS is a java-based software framework for the analysis of LC-MS/MS data of metabolites and other small molecules of biological interest. SIRIUS integrates a collection of our tools, including CSI:FingerID (with COSMIC), ZODIAC and CANOPUS.  In particular, both the graphical user interface and the command
     line version of SIRIUS seamlessly integrate the CSI:FingerID and CANOPUS web services.
-  doc_url: https://boecker-lab.github.io/docs.sirius.github.io/
-  dev_url: https://github.com/boecker-lab/sirius
+  doc_url: https://v6.docs.sirius-ms.io/
+  dev_url: https://github.com/sirius-ms/sirius
 
 extra:
   recipe-maintainers:
