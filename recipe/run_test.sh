@@ -20,10 +20,10 @@ echo "### [SIRIUS] Simple Sirius version test"
 sirius --version
 
 echo "### [SIRIUS] Run SIRIUS ILP solver Test"
-sirius -i $RECIPE_DIR/Kaempferol.ms -o test-out sirius
+sirius -i $RECIPE_DIR/Kaempferol.ms -o test-out.sirius sirius
 
 echo "### [SIRIUS] Check SIRIUS ILP solver Test results"
-if [ ! -f "test-out/1_Kaempferol_Kaempferol/trees" ]; then
+if [ ! -f "test-out.sirius" ]; then
   echo Framgentation tree test failed!
   exit 1
 fi
