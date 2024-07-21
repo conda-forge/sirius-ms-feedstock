@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 6e0319243091afb00ffbc829118fd71408a4069e4fe39c8e99e18f77bb08b39c
+    sha256: a24b63b649342fc91d52baf8c5289da83d1b29e28aa0c25313d350359bbdf946
 
 build:
   number: 0
