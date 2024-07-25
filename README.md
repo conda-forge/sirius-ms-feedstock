@@ -9,9 +9,9 @@ Package license: AGPL-3.0-only AND OTHER
 
 Summary: SIRIUS (CLI + GUI) LC-MS/MS data analyses framework. Includes: SIRIUS, ZODIAC, CSI:FingerID (with COSMIC) and CANOPUS
 
-Development: https://github.com/boecker-lab/sirius
+Development: https://github.com/sirius-ms/sirius
 
-Documentation: https://boecker-lab.github.io/docs.sirius.github.io/
+Documentation: https://v6.docs.sirius-ms.io/
 
 SIRIUS is a java-based software framework for the analysis of LC-MS/MS data of metabolites and other small molecules of biological interest. SIRIUS integrates a collection of our tools, including CSI:FingerID (with COSMIC), ZODIAC and CANOPUS.  In particular, both the graphical user interface and the command line version of SIRIUS seamlessly integrate the CSI:FingerID and CANOPUS web services.
 
