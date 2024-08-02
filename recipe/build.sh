@@ -41,7 +41,8 @@ echo "### Run gradle build on '$build_platform' for target platform: '$target_pl
   -P "build.sirius.starter.jdk.include=false" \
   -P "build.sirius.native.cbc.exclude=true" \
   -P "build.sirius.native.openjfx.exclude=false" \
-  -P "build.sirius.platform=$target_platform"
+  -P "build.sirius.platform=$target_platform" \
+  --stacktrace --warning-mode all
 
 echo "### Create package dirs"
 mkdir -p "${outdir:?}"
