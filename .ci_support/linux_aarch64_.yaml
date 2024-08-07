@@ -11,6 +11,6 @@ channel_targets:
 coin_or_cbc:
 - '2.10'
 docker_image:
-- quay.io/condaforge/linux-anvil-aarch64
+- quay.io/condaforge/linux-anvil-cos7-x86_64
 target_platform:
 - linux-aarch64
