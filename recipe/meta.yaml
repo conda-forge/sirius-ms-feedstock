@@ -7,10 +7,10 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 154bbf95d1f0aa765597e4c1f87b592513d35ffeb3a117bc7afb83c3397e4ca9
+    sha256: ff8f01cfb909719b18704c26db098bffdcfbaced0c7fc987cace1f5eadec9bb2
 
 build:
-  number: 0
+  number: 1
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
     - siriusDistDir={{ siriusDistDir }}
