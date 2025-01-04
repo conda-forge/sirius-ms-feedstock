@@ -57,7 +57,7 @@ line=$(awk -F '\t' 'NR==2 {print; exit}' "$SUMMARY_FILE")
 # Extract the second column using cut (tab-delimited by default)
 formula=$(echo "$line" | cut -f2)
 
-if [ "formula" != "$EXPECTED_FORMULA" ]; then
+if [ "$formula" != "$EXPECTED_FORMULA" ]; then
     echo "The molecularFormula in the first data line is '$formula', which does not match '$EXPECTED_FORMULA'."
     exit 1
 fi
