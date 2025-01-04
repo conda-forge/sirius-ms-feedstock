@@ -13,8 +13,6 @@ java -version
 ECHO "### [JAVA] Try run %JAVA_HOME%"
 %JAVA_HOME%/bin/java.exe -version
 
-
-
 echo ### [SIRIUS] Simple Sirius version test
 sirius.exe --version
 if errorlevel 1 exit /b 1
