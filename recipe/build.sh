@@ -36,13 +36,23 @@ echo "### Show Build dir"
 ls -lah ./
 
 echo "### Run gradle build on '$build_platform' for target platform: '$target_platform'"
+# just a workaround until our arrch64 jni wrapper in compatible with conda libs.
+if [ "$target_platform" == "linux-aarch64" ]; then
 ./gradlew :sirius_dist:sirius_gui_dist:installSiriusDist \
   -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/app" \
   -P "build.sirius.starter.jdk.include=false" \
-  -P "build.sirius.native.cbc.exclude=true" \
   -P "build.sirius.native.openjfx.exclude=false" \
   -P "build.sirius.platform=$target_platform" \
   --stacktrace --warning-mode all
+else
+  ./gradlew :sirius_dist:sirius_gui_dist:installSiriusDist \
+    -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/app" \
+    -P "build.sirius.starter.jdk.include=false" \
+    -P "build.sirius.native.cbc.exclude=true" \
+    -P "build.sirius.native.openjfx.exclude=true" \
+    -P "build.sirius.platform=$target_platform" \
+    --stacktrace --warning-mode all
+fi
 
 echo "### Create package dirs"
 mkdir -p "${outdir:?}"

@@ -1,7 +1,6 @@
 >compound Kaempferol
->formula C15H10O6
 >parentmass 287.055541992188
->ionization [M+H]+
+>ionization [M+?]+
 
 >collision 35
 106.7356185913086 3323.066650390625
