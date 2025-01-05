@@ -18,10 +18,14 @@ sirius.exe --version
 if errorlevel 1 exit /b 1
 
 REM Define variables
-set "SUMMARY_DIR=test-out"
+set "SUMMARY_DIR=%cd%\test-out"
+ECHO "SUMMARY_DIR=%SUMMARY_DIR%"
 set "SUMMARY_FILE=%SUMMARY_DIR%\formula_identifications.tsv"
+ECHO "SUMMARY_FILE=%SUMMARY_FILE%"
 set "EXPECTED_FORMULA=C15H10O6"
+ECHO "EXPECTED_FORMULA=%EXPECTED_FORMULA%"
 set "PROJECT=%SUMMARY_DIR%.sirius"
+ECHO "PROJECT=%PROJECT%"
 
 echo ### [SIRIUS] Run SIRIUS ILP solver Test
 REM Adjust the path to Kaempferol.ms as needed:
@@ -30,7 +34,7 @@ if errorlevel 1 exit /b 1
 
 echo ### [SIRIUS] Check if SIRIUS project exists
 if not exist "%PROJECT%" (
-    echo Fragmentation tree test failed!
+    echo Prject does not exist!
     exit /b 1
 )
 
