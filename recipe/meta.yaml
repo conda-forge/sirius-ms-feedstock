@@ -10,7 +10,7 @@ source:
     sha256: 5d94267cde42dfc2e621299f5cbde9736f6d648328626f7cd23234e84ab514b0
 
 build:
-  number: 0
+  number: 1
   skip: True  # [ppc64le]
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
@@ -21,7 +21,7 @@ requirements:
     - openjdk 21.*
   run:
     - openjdk 21.*
-    - coin-or-cbc  # [not win]
+    - coin-or-cbc 2.10.*  # [not (win or subdir == "linux-aarch64")]
 
 test:
   requires:
