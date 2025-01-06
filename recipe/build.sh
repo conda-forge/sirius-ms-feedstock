@@ -49,7 +49,7 @@ else
     -P "build.sirius.location.lib=\$CONDA_PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM/app" \
     -P "build.sirius.starter.jdk.include=false" \
     -P "build.sirius.native.cbc.exclude=true" \
-    -P "build.sirius.native.openjfx.exclude=true" \
+    -P "build.sirius.native.openjfx.exclude=false" \
     -P "build.sirius.platform=$target_platform" \
     --stacktrace --warning-mode all
 fi
