@@ -11,7 +11,11 @@ source:
 
 build:
   number: 0
-  skip: True  # [ppc64le or subdir == "linux-aarch64"]
+
+  skip:
+  - os: linux
+    arch: aarch64
+  - arch: ppc64
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
     - siriusDistDir={{ siriusDistDir }}

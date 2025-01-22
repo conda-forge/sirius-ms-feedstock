@@ -1,6 +1,10 @@
 setlocal EnableDelayedExpansion
 SET packageName=%PKG_NAME%-%PKG_VERSION%-%PKG_BUILDNUM%
 SET outdir=%PREFIX%/share/%packageName%
+REM Force Python’s default I/O encoding to UTF-8
+set PYTHONIOENCODING=UTF-8
+REM Also can do:
+set PYTHONUTF8=1
 
 ECHO "### ENV INFO"
 ECHO "PREFIX=%PREFIX%"
