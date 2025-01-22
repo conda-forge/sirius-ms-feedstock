@@ -10,7 +10,7 @@ source:
     sha256: 5b83fac63cba9edb7bb2b390fc768960f003388f7fa8548b0ea8899d8da54c78
 
 build:
-  skip: True  # [(ppc64le or subdir == "linux-aarch64")]
+  skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
   number: 0
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
