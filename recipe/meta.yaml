@@ -1,6 +1,12 @@
 {% set version = "6.1.1" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
+# Skip building on Linux ARM64 (aarch64) and all ppc64 architectures
+skip:
+  - os: linux
+    arch: aarch64
+  - arch: ppc64le
+
 package:
   name: sirius-ms
   version: {{ version }}
@@ -11,11 +17,6 @@ source:
 
 build:
   number: 0
-
-  skip:
-  - os: linux
-    arch: aarch64
-  - arch: ppc64
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
     - siriusDistDir={{ siriusDistDir }}
