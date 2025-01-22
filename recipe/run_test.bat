@@ -1,8 +1,4 @@
 setlocal EnableDelayedExpansion
-REM Force Python’s default I/O encoding to UTF-8
-set PYTHONIOENCODING=UTF-8
-REM Also can do:
-set PYTHONUTF8=1
 
 ECHO "### Start TESTING"
 ECHO "### [JAVA] Infos about JDK locations"
