@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 8b44c122de11274e1acc33122c15f84fb156a100ea5090324852a0353c019833
+    sha256: fe8b03e8a7091f0db16942585b2e038b9bcb08d1d587d3d0e5e2d65dea168af5
 
 build:
   skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
