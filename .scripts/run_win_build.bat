@@ -12,6 +12,11 @@
 
 setlocal enableextensions enabledelayedexpansion
 
+REM Force Python’s default I/O encoding to UTF-8
+set PYTHONIOENCODING=UTF-8
+REM Also can do:
+set PYTHONUTF8=1
+
 FOR %%A IN ("%~dp0.") DO SET "REPO_ROOT=%%~dpA"
 if "%MINIFORGE_HOME%"=="" set "MINIFORGE_HOME=%USERPROFILE%\Miniforge3"
 :: Remove trailing backslash, if present
