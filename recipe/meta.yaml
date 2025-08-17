@@ -7,12 +7,13 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: fe8b03e8a7091f0db16942585b2e038b9bcb08d1d587d3d0e5e2d65dea168af5
+    sha256: c224b802748574112bdc900b5c39d08ef4f77abee852f748ab3d53f2c71cf1e3
 
 build:
   skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
   number: 0
   script_env:
+    - PYTHONIOENCODING=UTF-8
     - PYTHONUTF8=1
     - siriusDistName={{ siriusDistDir }}-sirius
     - siriusDistDir={{ siriusDistDir }}
@@ -29,7 +30,7 @@ test:
     - wget  # [not win]
 
 about:
-  home: https://bio.informatik.uni-jena.de/software/sirius/
+  home: https://github.com/sirius-ms/sirius
   license: AGPL-3.0-only AND OTHER
   license_file:
     - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/COPYING.txt
