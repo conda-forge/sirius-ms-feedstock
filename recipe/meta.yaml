@@ -1,4 +1,4 @@
-{% set version = "6.1.1" %}
+{% set version = "6.3.0" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 5b83fac63cba9edb7bb2b390fc768960f003388f7fa8548b0ea8899d8da54c78
+    sha256: c224b802748574112bdc900b5c39d08ef4f77abee852f748ab3d53f2c71cf1e3
 
 build:
   skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
@@ -21,14 +21,14 @@ requirements:
     - openjdk 21.*
   run:
     - openjdk 21.*
-    - coin-or-cbc 2.10.*  # [not (win or subdir == "linux-aarch64")]
+    - coin-or-cbc 2.10.*
 
 test:
   requires:
     - wget  # [not win]
 
 about:
-  home: https://bio.informatik.uni-jena.de/software/sirius/
+  home: https://github.com/sirius-ms/sirius
   license: AGPL-3.0-only AND OTHER
   license_file:
     - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/COPYING.txt
