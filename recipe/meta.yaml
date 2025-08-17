@@ -13,8 +13,6 @@ build:
   skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
   number: 0
   script_env:
-    - PYTHONIOENCODING=UTF-8
-    - PYTHONUTF8=1
     - siriusDistName={{ siriusDistDir }}-sirius
     - siriusDistDir={{ siriusDistDir }}
 
