@@ -28,7 +28,6 @@ call gradlew.bat :sirius_dist:sirius_gui_dist:installSiriusDist^
     -P "build.sirius.location.lib=..\share\%packageName%\app"^
     -P "build.sirius.starter.jdk.include=false"^
     -P "build.sirius.starter.jdk.location=../Library/lib/jvm"^
-    -P "build.sirius.native.cbc.exclude=true"^
     --stacktrace --warning-mode all
 if errorlevel 1 exit 1
 

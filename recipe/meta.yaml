@@ -10,7 +10,8 @@ source:
     sha256: 873a57c5380b3626d369ae42716cef82cf9d9d969ad64aca24b51c7672039765
 
 build:
-  skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
+#  skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
+  skip: "{{ ('ppc64le' in target_platform) }}"
   number: 0
   script_env:
     - siriusDistName={{ siriusDistDir }}-sirius
