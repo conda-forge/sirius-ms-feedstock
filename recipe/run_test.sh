@@ -22,6 +22,9 @@ echo "### [JAVA] Try run $JAVA_HOME"
 echo "### [SIRIUS] Simple Sirius help test"
 sirius --help
 
+echo "### [SIRIUS] Sirius self-test"
+sirius selftest
+
 #SUMMARY_DIR="test-out"
 #SUMMARY_FILE="test-out/formula_identifications.tsv"
 #EXPECTED_FORMULA="C15H10O6"

@@ -17,6 +17,10 @@ echo ### [SIRIUS] Simple Sirius help test
 sirius.exe --help
 if errorlevel 1 exit /b 1
 
+echo ### [SIRIUS] Executing Sirius self-test
+sirius.exe selftest
+if errorlevel 1 exit /b 1
+
 REM Define variables
 REM set "SUMMARY_DIR=%cd%\test-out"
 REM ECHO "SUMMARY_DIR=%SUMMARY_DIR%"
