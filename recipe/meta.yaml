@@ -22,7 +22,7 @@ requirements:
     - openjdk 21.*
   run:
     - openjdk 21.*
-    - coin-or-cbc 2.10.* # [not win]
+    - coin-or-cbc 2.10.*  # [not win]
 
 test:
   requires:
@@ -30,7 +30,7 @@ test:
 
 about:
   home: https://github.com/sirius-ms/sirius
-  license: AGPL-3.0-only AND OTHER
+  license: AGPL-3.0-only
   license_file:
     - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/COPYING.txt
     - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/LICENSE.txt
