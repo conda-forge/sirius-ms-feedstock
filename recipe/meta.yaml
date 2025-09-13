@@ -3,11 +3,11 @@
 
 package:
   name: sirius-ms
-  version: {{ version }}
+  version: "{{ version }}rc1"
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}-SNAPSHOT.zip
-    sha256: 873a57c5380b3626d369ae42716cef82cf9d9d969ad64aca24b51c7672039765
+    sha256: dab0c0b353f4aca860cf808d7f9d4c3331fb13ea469b2edcd4a02fd8ce8da936
 
 build:
 #  skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
@@ -22,7 +22,7 @@ requirements:
     - openjdk 21.*
   run:
     - openjdk 21.*
-    - coin-or-cbc 2.10.*
+    - coin-or-cbc 2.10.* # [not win]
 
 test:
   requires:
