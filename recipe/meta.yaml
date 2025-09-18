@@ -3,11 +3,11 @@
 
 package:
   name: sirius-ms
-  version: "{{ version }}rc2"
+  version: "{{ version }}"
 
 source:
-  - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}-SNAPSHOT.zip
-    sha256: 6a1ff13cc5a52e3038c7d8585d48cbf96f09875e93134c56046125a9b6a40236
+  - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
+    sha256: a2ead2f618d4cacc5f9f0ffcbc44dfdafd445ad8894c4f8d68da019bd6a6ce60
 
 build:
 #  skip: "{{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}"
