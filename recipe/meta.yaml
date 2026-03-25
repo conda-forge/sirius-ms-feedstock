@@ -1,4 +1,4 @@
-{% set version = "6.3.3" %}
+{% set version = "6.3.4" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 893e78021dbfd34263851066f10bff92856bbe6fc8cb90523493c645fb7e21a0
+    sha256: 0e18e2a96015738c21b5c7764f54d2eebafdb891cdd053b46670a5a47361aa80
 
 build:
 #  skip: {{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}
@@ -36,8 +36,8 @@ about:
     - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/LICENSE.txt
     - sirius_dist/{{ siriusDistDir }}/build/install/{{ siriusDistDir }}-sirius/licenses.md
   summary: 'SIRIUS (CLI + GUI) LC-MS/MS data analyses framework. Includes: SIRIUS, ZODIAC, CSI:FingerID (with COSMIC) and CANOPUS'
-  description: SIRIUS is a java-based software framework for the analysis of LC-MS/MS data of metabolites and other small molecules of biological interest. SIRIUS integrates a collection of our tools, including CSI:FingerID (with COSMIC), ZODIAC and CANOPUS.  In particular, both the graphical user interface and the command
-    line version of SIRIUS seamlessly integrate the CSI:FingerID and CANOPUS web services.
+  description: SIRIUS is a java-based software framework for the analysis of LC-MS/MS data of metabolites and other small molecules of biological interest. SIRIUS integrates a collection of our tools, including CSI:FingerID (with COSMIC), ZODIAC and CANOPUS.  In particular, both the graphical user interface and the 
+    command line version of SIRIUS seamlessly integrate the CSI:FingerID and CANOPUS web services.
   doc_url: https://v6.docs.sirius-ms.io/
   dev_url: https://github.com/sirius-ms/sirius
 
