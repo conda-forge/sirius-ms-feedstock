@@ -1,4 +1,4 @@
-{% set version = "6.3.4" %}
+{% set version = "6.3.5" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 0e18e2a96015738c21b5c7764f54d2eebafdb891cdd053b46670a5a47361aa80
+    sha256: 3bf4a7b5ef8cb2c38720f89406dfd586a868b3e6c7f308bb7a8c6b6ee3ad0436
 
 build:
 #  skip: {{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}
