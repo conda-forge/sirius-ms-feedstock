@@ -1,4 +1,5 @@
-{% set version = "6.3.4" %}
+{% set version = "6.3.8rc1" %}
+{% set tag = "6.3.8" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -6,8 +7,10 @@ package:
   version: "{{ version }}"
 
 source:
-  - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 0e18e2a96015738c21b5c7764f54d2eebafdb891cdd053b46670a5a47361aa80
+  # Pre-release: the conda package version carries the `rc1` suffix (sorts below the eventual
+  # stable 6.3.8) while the source still comes from the actual upstream git tag `v6.3.8`.
+  - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ tag }}.zip
+    sha256: 8b49a979a5e9b4081304966ff183741745f5975ba8096f8ecdc862e1370ecbd7
 
 build:
 #  skip: {{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}
@@ -19,9 +22,11 @@ build:
 
 requirements:
   build:
-    - openjdk 21.*
+    # openjdk 25 is required for the Project Leyden AOT flags used by the launcher
+    # (-XX:AOTCacheOutput / -XX:AOTCache, JEP 483/514) and the `aot-train` tool.
+    - openjdk 25.*
   run:
-    - openjdk 21.*
+    - openjdk 25.*
     - coin-or-cbc 2.10.*  # [not win]
 
 test:
