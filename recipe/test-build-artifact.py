@@ -1,26 +1,41 @@
 #!/usr/bin/env python3
-"""exec" "python3" "$0" "$@" #"""  # sh/zsh guard so `./test-artifact.py` uses python3
+"""exec" "python3" "$0" "$@" #"""  # sh/zsh guard so `./test-build-artifact.py` uses python3
 
-# Download the CI-built conda package for THIS machine's platform and install it into a
-# fresh test environment - in one command - so a maintainer can smoke-test exactly what the
-# feedstock pipeline produced before publishing to conda-forge.
+# =============================================================================
+# test-build-artifact.py  -  maintainer helper (NOT part of the package build)
+# =============================================================================
 #
-#   python test-artifact.py                 # grab the latest successful CI build, install it
-#   python test-artifact.py --no-install    # just download + unpack the .conda
-#   python test-artifact.py --keep          # do not remove the temp download dir
-#   python test-artifact.py --env my-test   # install into env "my-test" (default: sirius-rc)
-#   python test-artifact.py --build-id N    # Azure: use a specific build (osx/win)
-#   python test-artifact.py --run-id N      # GitHub Actions: use a specific run (linux)
+# PURPOSE
+#   Download the conda package that the feedstock's CI pipeline built for THIS
+#   machine's platform and install it into a fresh test environment - in a
+#   single command - so a maintainer can smoke-test exactly what the pipeline
+#   produced BEFORE publishing it to conda-forge (i.e. before merging the PR).
 #
-# How it finds the artifact (nothing hard-coded per release - all derived):
+#   It fetches the real CI build output; it does not rebuild anything locally.
+#
+# USAGE  (run from anywhere inside a checkout of this feedstock)
+#   python recipe/test-build-artifact.py               # latest successful CI build -> install
+#   python recipe/test-build-artifact.py --no-install  # just download + unpack the .conda
+#   python recipe/test-build-artifact.py --keep        # keep the temp download dir
+#   python recipe/test-build-artifact.py --env my-test # env name (default: sirius-rc)
+#   python recipe/test-build-artifact.py --build-id N  # Azure: pin a specific build (osx/win)
+#   python recipe/test-build-artifact.py --run-id N    # GitHub Actions: pin a specific run (linux)
+#
+# HOW IT FINDS THE ARTIFACT  (nothing hard-coded per release - all derived)
 #   * package name + version   <- recipe/meta.yaml
 #   * platform subdir/config   <- this machine (linux-64 / osx-64 / osx-arm64 / win-64)
 #   * the built .conda         <- the newest SUCCESSFUL CI run's stored build artifact:
-#         - linux  -> GitHub Actions  (needs the `gh` CLI, authenticated)
+#         - linux   -> GitHub Actions  (needs the `gh` CLI, authenticated)
 #         - osx/win -> conda-forge Azure  (public REST API, no auth needed)
 #
-# Requires `store_build_artifacts` to be enabled in the feedstock (see conda-forge.yml); the
-# artifact only exists on builds that ran AFTER that was turned on.
+# REQUIREMENTS / NOTES
+#   * `store_build_artifacts` must be enabled in conda-forge.yml (it is); the
+#     artifact only exists on CI builds that ran AFTER that was turned on.
+#   * This file lives in recipe/ (the conda-forge-sanctioned location for extra
+#     feedstock files) and is listed under `skip_render` in conda-forge.yml so
+#     conda-smithy leaves it untouched on rerender. It is not referenced by the
+#     recipe and has no effect on the built package.
+# =============================================================================
 
 import argparse
 import json
@@ -56,9 +71,24 @@ def run(cmd, **kw):
 
 # --- inputs derived from the repo -------------------------------------------------
 
+def meta_yaml_path():
+    """Locate recipe/meta.yaml whether this script sits in recipe/ or at the repo root."""
+    candidates = [HERE / "meta.yaml", HERE / "recipe" / "meta.yaml"]
+    try:
+        root = Path(run(["git", "-C", str(HERE), "rev-parse", "--show-toplevel"],
+                        capture_output=True, text=True).stdout.strip())
+        candidates.insert(0, root / "recipe" / "meta.yaml")
+    except Exception:
+        pass
+    for c in candidates:
+        if c.is_file():
+            return c
+    fail("could not locate recipe/meta.yaml")
+
+
 def read_recipe():
     """Return (package_name, version) parsed from recipe/meta.yaml."""
-    text = (HERE / "recipe" / "meta.yaml").read_text(encoding="utf-8")
+    text = meta_yaml_path().read_text(encoding="utf-8")
     m = re.search(r'{%\s*set\s+version\s*=\s*"([^"]+)"', text)
     if not m:
         fail("could not find the version in recipe/meta.yaml")
