@@ -14,12 +14,12 @@
 #   It fetches the real CI build output; it does not rebuild anything locally.
 #
 # USAGE  (run from anywhere inside a checkout of this feedstock)
-#   python recipe/test-build-artifact.py               # latest successful CI build -> install
-#   python recipe/test-build-artifact.py --no-install  # just download + unpack the .conda
-#   python recipe/test-build-artifact.py --keep        # keep the temp download dir
-#   python recipe/test-build-artifact.py --env my-test # env name (default: sirius-rc)
-#   python recipe/test-build-artifact.py --build-id N  # Azure: pin a specific build (osx/win)
-#   python recipe/test-build-artifact.py --run-id N    # GitHub Actions: pin a specific run (linux)
+#   python test-build-artifact.py               # latest successful CI build -> install
+#   python test-build-artifact.py --no-install  # just download + unpack the .conda
+#   python test-build-artifact.py --keep        # keep the temp download dir
+#   python test-build-artifact.py --env my-test # env name (default: sirius-rc)
+#   python test-build-artifact.py --build-id N  # Azure: pin a specific build (osx/win)
+#   python test-build-artifact.py --run-id N    # GitHub Actions: pin a specific run (linux)
 #
 # HOW IT FINDS THE ARTIFACT  (nothing hard-coded per release - all derived)
 #   * package name + version   <- recipe/meta.yaml
@@ -31,10 +31,11 @@
 # REQUIREMENTS / NOTES
 #   * `store_build_artifacts` must be enabled in conda-forge.yml (it is); the
 #     artifact only exists on CI builds that ran AFTER that was turned on.
-#   * This file lives in recipe/ (the conda-forge-sanctioned location for extra
-#     feedstock files) and is listed under `skip_render` in conda-forge.yml so
-#     conda-smithy leaves it untouched on rerender. It is not referenced by the
-#     recipe and has no effect on the built package.
+#   * This file lives at the repo root (kept out of recipe/ on purpose so it is
+#     NOT bundled into the built package). Because conda-smithy's .gitignore
+#     treats the root as smithy-managed, it is force-added (`git add -f`); this
+#     is harmless - conda-smithy rerender does not touch it. It is not part of
+#     the recipe and has no effect on the built package.
 # =============================================================================
 
 import argparse
