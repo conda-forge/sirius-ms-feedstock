@@ -160,10 +160,10 @@ def latest_gha_run(repo, branch):
 
 def download_gha(repo, run_id, dest):
     info(f"downloading GitHub Actions artifacts from run {run_id} ...")
-    # success builds name the package artifact conda_pkgs_* ; grab those only.
+    # package artifacts: conda_pkgs_* (success) or conda_artifacts_* (failure); not conda_envs_*.
     try:
         run(["gh", "run", "download", str(run_id), "-R", repo,
-             "--pattern", "conda_pkgs_*", "-D", str(dest)])
+             "--pattern", "conda_pkgs_*", "--pattern", "conda_artifacts_*", "-D", str(dest)])
     except subprocess.CalledProcessError:
         # fall back to downloading everything if the pattern matched nothing
         run(["gh", "run", "download", str(run_id), "-R", repo, "-D", str(dest)])
@@ -202,11 +202,13 @@ def download_azure(build_id, config, dest):
     info(f"looking up Azure artifacts for build {build_id} ...")
     data = azure_get(f"build/builds/{build_id}/artifacts", {"api-version": "6.0"})
     arts = data.get("value", [])
-    # success -> conda_pkgs_* ; prefer the one for our config.
-    cand = [a for a in arts if a["name"].startswith("conda_pkgs")]
+    # Built packages are stored as conda_pkgs_* (GitHub Actions on success) or conda_artifacts_*
+    # (Azure, and any failed build); conda_envs_* holds only debug environments (no .conda), so
+    # exclude it. Prefer the artifact matching our platform config.
+    cand = [a for a in arts if a["name"].startswith(("conda_pkgs", "conda_artifacts"))]
     match = [a for a in cand if config.rstrip("_") in a["name"]] or cand
     if not match:
-        fail(f"build {build_id} has no conda_pkgs artifact "
+        fail(f"build {build_id} has no package artifact "
              f"(available: {[a['name'] for a in arts]}). Is store_build_artifacts enabled?")
     art = match[0]
     url = art["resource"]["downloadUrl"]
