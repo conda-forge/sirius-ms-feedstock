@@ -1,0 +1,298 @@
+#!/usr/bin/env python3
+"""exec" "python3" "$0" "$@" #"""  # sh/zsh guard so `./test-artifact.py` uses python3
+
+# Download the CI-built conda package for THIS machine's platform and install it into a
+# fresh test environment - in one command - so a maintainer can smoke-test exactly what the
+# feedstock pipeline produced before publishing to conda-forge.
+#
+#   python test-artifact.py                 # grab the latest successful CI build, install it
+#   python test-artifact.py --no-install    # just download + unpack the .conda
+#   python test-artifact.py --keep          # do not remove the temp download dir
+#   python test-artifact.py --env my-test   # install into env "my-test" (default: sirius-rc)
+#   python test-artifact.py --build-id N    # Azure: use a specific build (osx/win)
+#   python test-artifact.py --run-id N      # GitHub Actions: use a specific run (linux)
+#
+# How it finds the artifact (nothing hard-coded per release - all derived):
+#   * package name + version   <- recipe/meta.yaml
+#   * platform subdir/config   <- this machine (linux-64 / osx-64 / osx-arm64 / win-64)
+#   * the built .conda         <- the newest SUCCESSFUL CI run's stored build artifact:
+#         - linux  -> GitHub Actions  (needs the `gh` CLI, authenticated)
+#         - osx/win -> conda-forge Azure  (public REST API, no auth needed)
+#
+# Requires `store_build_artifacts` to be enabled in the feedstock (see conda-forge.yml); the
+# artifact only exists on builds that ran AFTER that was turned on.
+
+import argparse
+import json
+import os
+import platform
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import urllib.request
+import zipfile
+from pathlib import Path
+
+AZURE_ORG = "conda-forge"
+AZURE_PROJECT = "feedstock-builds"
+GHA_WORKFLOW = "conda-build.yml"
+HERE = Path(__file__).resolve().parent
+
+
+def fail(msg):
+    print(f"\nERROR: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def info(msg):
+    print(f"==> {msg}")
+
+
+def run(cmd, **kw):
+    return subprocess.run(cmd, check=True, **kw)
+
+
+# --- inputs derived from the repo -------------------------------------------------
+
+def read_recipe():
+    """Return (package_name, version) parsed from recipe/meta.yaml."""
+    text = (HERE / "recipe" / "meta.yaml").read_text(encoding="utf-8")
+    m = re.search(r'{%\s*set\s+version\s*=\s*"([^"]+)"', text)
+    if not m:
+        fail("could not find the version in recipe/meta.yaml")
+    version = m.group(1)
+    # package.name: the first `name:` after the `package:` key.
+    pkg = re.search(r"(?ms)^package:\s*\n(.*?)(?=^\S)", text)
+    name = None
+    if pkg:
+        nm = re.search(r"^\s+name:\s*([^\s#]+)", pkg.group(1), re.M)
+        if nm:
+            name = nm.group(1).strip().strip('"').strip("'")
+    if not name:
+        fail("could not find package.name in recipe/meta.yaml")
+    return name, version
+
+
+def detect_platform():
+    """Return (subdir, provider, config) for this machine."""
+    sysname = platform.system()
+    mach = platform.machine().lower()
+    is_arm = mach in ("arm64", "aarch64")
+    if sysname == "Linux":
+        if is_arm:
+            return "linux-aarch64", "gha", "linux_aarch64_"
+        return "linux-64", "gha", "linux_64_"
+    if sysname == "Darwin":
+        if is_arm:
+            return "osx-arm64", "azure", "osx_arm64_"
+        return "osx-64", "azure", "osx_64_"
+    if sysname == "Windows":
+        return "win-64", "azure", "win_64_"
+    fail(f"unsupported platform: {sysname}/{mach}")
+
+
+def feedstock_repo():
+    """owner/repo of the feedstock, from the git remotes (prefers conda-forge)."""
+    try:
+        out = run(["git", "-C", str(HERE), "remote", "-v"],
+                  capture_output=True, text=True).stdout
+    except Exception:
+        out = ""
+    repos = re.findall(r"github\.com[:/]([^/\s]+/[^/\s.]+)", out)
+    for r in repos:
+        if r.startswith("conda-forge/"):
+            return r
+    return repos[0] if repos else "conda-forge/sirius-ms-feedstock"
+
+
+# --- GitHub Actions (linux) -------------------------------------------------------
+
+def gh_available():
+    return shutil.which("gh") is not None
+
+
+def latest_gha_run(repo, branch):
+    args = ["gh", "run", "list", "-R", repo, "--workflow", GHA_WORKFLOW,
+            "--status", "success", "-L", "1", "--json", "databaseId,headBranch,createdAt"]
+    if branch:
+        args += ["--branch", branch]
+    out = run(args, capture_output=True, text=True).stdout
+    runs = json.loads(out)
+    if not runs:
+        fail("no successful GitHub Actions run found"
+             + (f" for branch {branch}" if branch else "")
+             + ". Push the build first, or pass --run-id.")
+    return runs[0]["databaseId"]
+
+
+def download_gha(repo, run_id, dest):
+    info(f"downloading GitHub Actions artifacts from run {run_id} ...")
+    # success builds name the package artifact conda_pkgs_* ; grab those only.
+    try:
+        run(["gh", "run", "download", str(run_id), "-R", repo,
+             "--pattern", "conda_pkgs_*", "-D", str(dest)])
+    except subprocess.CalledProcessError:
+        # fall back to downloading everything if the pattern matched nothing
+        run(["gh", "run", "download", str(run_id), "-R", repo, "-D", str(dest)])
+
+
+# --- Azure (osx / win) ------------------------------------------------------------
+
+def azure_get(path, params):
+    q = "&".join(f"{k}={v}" for k, v in params.items())
+    url = f"https://dev.azure.com/{AZURE_ORG}/{AZURE_PROJECT}/_apis/{path}?{q}"
+    with urllib.request.urlopen(url, timeout=60) as r:
+        return json.loads(r.read().decode())
+
+
+def azure_definition_id(feedstock_name):
+    data = azure_get("build/definitions", {"name": feedstock_name, "api-version": "6.0"})
+    if data.get("count"):
+        return data["value"][0]["id"]
+    fail(f"could not find an Azure build definition named {feedstock_name}")
+
+
+def latest_azure_build(def_id, branch):
+    params = {"definitions": def_id, "statusFilter": "completed",
+              "resultFilter": "succeeded,partiallySucceeded", "$top": "1", "api-version": "6.0"}
+    if branch:
+        params["branchName"] = f"refs/heads/{branch}"
+    data = azure_get(f"build/builds", params)
+    if not data.get("count"):
+        fail("no successful Azure build found"
+             + (f" for branch {branch}" if branch else "")
+             + ". Push the build first, or pass --build-id.")
+    return data["value"][0]["id"]
+
+
+def download_azure(build_id, config, dest):
+    info(f"looking up Azure artifacts for build {build_id} ...")
+    data = azure_get(f"build/builds/{build_id}/artifacts", {"api-version": "6.0"})
+    arts = data.get("value", [])
+    # success -> conda_pkgs_* ; prefer the one for our config.
+    cand = [a for a in arts if a["name"].startswith("conda_pkgs")]
+    match = [a for a in cand if config.rstrip("_") in a["name"]] or cand
+    if not match:
+        fail(f"build {build_id} has no conda_pkgs artifact "
+             f"(available: {[a['name'] for a in arts]}). Is store_build_artifacts enabled?")
+    art = match[0]
+    url = art["resource"]["downloadUrl"]
+    zpath = dest / f"{art['name']}.zip"
+    info(f"downloading Azure artifact {art['name']} ...")
+    download_url(url, zpath)
+
+
+def download_url(url, dest):
+    with urllib.request.urlopen(url, timeout=300) as r, open(dest, "wb") as f:
+        shutil.copyfileobj(r, f)
+
+
+# --- unpack + install -------------------------------------------------------------
+
+def extract_all_zips(root):
+    """Recursively extract every .zip under root (artifacts are zip, sometimes zip-in-zip)."""
+    seen = set()
+    changed = True
+    while changed:
+        changed = False
+        for z in list(root.rglob("*.zip")):
+            if z in seen:
+                continue
+            seen.add(z)
+            try:
+                with zipfile.ZipFile(z) as zf:
+                    zf.extractall(z.parent)
+                changed = True
+            except zipfile.BadZipFile:
+                pass
+
+
+def find_conda(root, name, version, subdir):
+    pat = re.compile(rf"^{re.escape(name)}-{re.escape(version)}-.*\.conda$")
+    # prefer a hit under the matching platform subdir
+    hits = [p for p in root.rglob("*.conda") if pat.match(p.name)]
+    if not hits:
+        fail(f"no {name}-{version}-*.conda found in the downloaded artifact")
+    pref = [p for p in hits if p.parent.name == subdir]
+    return (pref or hits)[0]
+
+
+def detect_pm(explicit):
+    if explicit:
+        return explicit
+    for pm in ("micromamba", "mamba", "conda"):
+        if shutil.which(pm):
+            return pm
+    fail("no conda package manager found (looked for micromamba/mamba/conda); pass --pm")
+
+
+def install(pm, env, conda_file, force):
+    info(f"installing into env '{env}' with {pm} ...")
+    create = [pm, "create", "-y", "-n", env, "-c", "conda-forge", str(conda_file)]
+    if force:
+        # remove a pre-existing env first so re-runs are clean
+        subprocess.run([pm, "env", "remove", "-y", "-n", env],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    run(create)
+    print()
+    info(f"done. Activate and test with:\n"
+         f"    {pm} activate {env}\n"
+         f"    sirius --version && sirius selftest")
+
+
+# --- main -------------------------------------------------------------------------
+
+def main():
+    ap = argparse.ArgumentParser(description="Download + install this feedstock's CI-built "
+                                             "package for the current OS, in one command.")
+    ap.add_argument("--branch", default=None,
+                    help="filter CI to this branch (default: newest successful run, any branch)")
+    ap.add_argument("--build-id", type=int, help="Azure build id to use (osx/win)")
+    ap.add_argument("--run-id", type=int, help="GitHub Actions run id to use (linux)")
+    ap.add_argument("--env", default="sirius-rc", help="target env name (default: sirius-rc)")
+    ap.add_argument("--pm", choices=["micromamba", "mamba", "conda"],
+                    help="package manager (default: autodetect)")
+    ap.add_argument("--download-dir", help="where to download (default: a temp dir)")
+    ap.add_argument("--no-install", action="store_true", help="download + unpack only")
+    ap.add_argument("--keep", action="store_true", help="keep the download dir")
+    ap.add_argument("--force", action="store_true", help="replace the target env if it exists")
+    ns = ap.parse_args()
+
+    name, version = read_recipe()
+    subdir, provider, config = detect_platform()
+    repo = feedstock_repo()
+    feedstock = repo.split("/")[-1]
+    info(f"{name} {version}  |  platform {subdir}  |  {provider}  |  feedstock {repo}")
+
+    dest = Path(ns.download_dir).resolve() if ns.download_dir else \
+        Path(tempfile.mkdtemp(prefix="sirius-artifact-"))
+    dest.mkdir(parents=True, exist_ok=True)
+
+    try:
+        if provider == "gha":
+            if not gh_available():
+                fail("the GitHub CLI `gh` is required to fetch the linux artifact "
+                     "(osx/win use the anonymous Azure API). Install gh and `gh auth login`.")
+            run_id = ns.run_id or latest_gha_run(repo, ns.branch)
+            download_gha(repo, run_id, dest)
+        else:
+            build_id = ns.build_id or latest_azure_build(azure_definition_id(feedstock), ns.branch)
+            download_azure(build_id, config, dest)
+
+        extract_all_zips(dest)
+        conda_file = find_conda(dest, name, version, subdir)
+        info(f"found package: {conda_file}")
+
+        if ns.no_install:
+            print(f"\n{conda_file}")
+            return
+        install(detect_pm(ns.pm), ns.env, conda_file, ns.force)
+    finally:
+        if not ns.keep and not ns.download_dir:
+            shutil.rmtree(dest, ignore_errors=True)
+
+
+if __name__ == "__main__":
+    main()
