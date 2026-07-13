@@ -158,12 +158,15 @@ def latest_gha_run(repo, branch):
     return runs[0]["databaseId"]
 
 
-def download_gha(repo, run_id, dest):
+def download_gha(repo, run_id, dest, config):
     info(f"downloading GitHub Actions artifacts from run {run_id} ...")
-    # package artifacts: conda_pkgs_* (success) or conda_artifacts_* (failure); not conda_envs_*.
+    # Only THIS platform's package artifact: conda_pkgs_*<config> (success) or
+    # conda_artifacts_*<config> (failure). Excludes conda_envs_* and other arches
+    # (e.g. *linux_64_ does not match *linux_aarch64_).
     try:
         run(["gh", "run", "download", str(run_id), "-R", repo,
-             "--pattern", "conda_pkgs_*", "--pattern", "conda_artifacts_*", "-D", str(dest)])
+             "--pattern", f"conda_pkgs_*{config}", "--pattern", f"conda_artifacts_*{config}",
+             "-D", str(dest)])
     except subprocess.CalledProcessError:
         # fall back to downloading everything if the pattern matched nothing
         run(["gh", "run", "download", str(run_id), "-R", repo, "-D", str(dest)])
@@ -261,14 +264,19 @@ def detect_pm(explicit):
     fail("no conda package manager found (looked for micromamba/mamba/conda); pass --pm")
 
 
-def install(pm, env, conda_file, force):
-    info(f"installing into env '{env}' with {pm} ...")
-    create = [pm, "create", "-y", "-n", env, "-c", "conda-forge", str(conda_file)]
+def install(pm, env, conda_file, name, version, force):
+    # The extracted artifact is a full local conda channel (<build_artifacts>/<subdir>/*.conda
+    # plus repodata.json), so install FROM that channel and pull dependencies (openjdk, cbc, ...)
+    # from conda-forge. Passing the bare .conda file path to `create` does NOT solve reliably.
+    channel = conda_file.parent.parent
+    info(f"installing {name}={version} into env '{env}' with {pm} "
+         f"(local channel: .../{channel.name}/{conda_file.parent.name}) ...")
     if force:
         # remove a pre-existing env first so re-runs are clean
         subprocess.run([pm, "env", "remove", "-y", "-n", env],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    run(create)
+    run([pm, "create", "-y", "-n", env,
+         "-c", channel.as_uri(), "-c", "conda-forge", f"{name}={version}"])
     print()
     info(f"done. Activate and test with:\n"
          f"    {pm} activate {env}\n"
@@ -309,7 +317,7 @@ def main():
                 fail("the GitHub CLI `gh` is required to fetch the linux artifact "
                      "(osx/win use the anonymous Azure API). Install gh and `gh auth login`.")
             run_id = ns.run_id or latest_gha_run(repo, ns.branch)
-            download_gha(repo, run_id, dest)
+            download_gha(repo, run_id, dest, config)
         else:
             build_id = ns.build_id or latest_azure_build(azure_definition_id(feedstock), ns.branch)
             download_azure(build_id, config, dest)
@@ -321,7 +329,7 @@ def main():
         if ns.no_install:
             print(f"\n{conda_file}")
             return
-        install(detect_pm(ns.pm), ns.env, conda_file, ns.force)
+        install(detect_pm(ns.pm), ns.env, conda_file, name, version, ns.force)
     finally:
         if not ns.keep and not ns.download_dir:
             shutil.rmtree(dest, ignore_errors=True)
