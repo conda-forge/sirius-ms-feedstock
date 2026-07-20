@@ -1,4 +1,4 @@
-{% set version = "6.3.4" %}
+{% set version = "6.3.11" %}
 {% set siriusDistDir = "sirius_gui_dist" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/sirius-ms/sirius/archive/refs/tags/v{{ version }}.zip
-    sha256: 0e18e2a96015738c21b5c7764f54d2eebafdb891cdd053b46670a5a47361aa80
+    sha256: 57e93ffdf13cbef41113d460d86c29c6ca1c8cc8f8dae11103fd994801da46b8
 
 build:
 #  skip: {{ ('linux' in target_platform and 'aarch64' in target_platform) or ('ppc64le' in target_platform) }}
@@ -19,9 +19,11 @@ build:
 
 requirements:
   build:
-    - openjdk 21.*
+    # openjdk 25 is required for the Project Leyden AOT flags used by the launcher
+    # (-XX:AOTCacheOutput / -XX:AOTCache, JEP 483/514) and the `aot-train` tool.
+    - openjdk 25.*
   run:
-    - openjdk 21.*
+    - openjdk 25.*
     - coin-or-cbc 2.10.*  # [not win]
 
 test:
